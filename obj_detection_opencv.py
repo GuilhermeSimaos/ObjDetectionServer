@@ -4,7 +4,7 @@ import os
 
 # Taking configuration and model file
 config_file = os.getcwd() + '/opencvFiles/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt'
-frozen_model = os.getcwd() + 'opencvFiles/frozen_inference_graph.pb'
+frozen_model = os.getcwd() + '/opencvFiles/frozen_inference_graph.pb'
 
 # Setting up detection model
 model = cv2.dnn_DetectionModel(frozen_model, config_file)
