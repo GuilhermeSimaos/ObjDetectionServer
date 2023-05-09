@@ -28,7 +28,6 @@ model.setInputSwapRB(True)
 
 # Function to process images and save it locally
 def process_image(image_path):
-    pre_process_configuration()
     """ --------------------------------------- IMAGE ------------------------------------------------------
 
     This function is used to analyse an image and save the processed image in Images folder.

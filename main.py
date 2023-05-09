@@ -1,5 +1,6 @@
 from flask import Flask, request, send_file, render_template
 from flask_cors import CORS
+import obj_detection_opencv
 import os
 
 # Define Flask and CORS
@@ -26,7 +27,7 @@ def handle_image():
     image.save(os.getcwd()+'/my-photo.jpg');
 
     # Processing image
-    object_detection.process_image('./my-photo.jpg')
+    obj_detection_opencv.process_image(os.getcwd()+'/my-photo.jpg')
 
     # Return received image message
     return 'Image received successfully!', 200
@@ -40,4 +41,4 @@ def send_processed_photo():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0:$PORT')
