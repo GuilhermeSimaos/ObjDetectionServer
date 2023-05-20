@@ -12,9 +12,7 @@ temporary_files = []
 
 
 async def process_image_async(image_path):
-    loop = asyncio.get_event_loop()
-
-    await loop.run_in_executor(None, obj_detection_opencv.process_image(image_path))
+    await asyncio.to_thread(obj_detection_opencv.process_image, image_path)
 
 
 @app.route('/')
@@ -28,21 +26,21 @@ def handle_image():
     # Retrieving the POST image formData from frontend
     image = request.files.get('image')
 
-    # Return error if image wasn't on the formData
+    # Return error if image wasn't in the formData
     if image is None:
         return 'Image not found in form', 400
 
-    # Setting original image path variable
+    # Setting the original image path variable
     original_image_path = os.getcwd() + '/my-photo.jpg'
 
-    # Saving image locally and temporary
+    # Saving the image locally and temporarily
     image.save(original_image_path)
     temporary_files.append(original_image_path)
 
-    # Processing image using async function
-    asyncio.ensure_future(process_image_async(original_image_path))
+    # Processing the image using the async function
+    asyncio.create_task(process_image_async(original_image_path))
 
-    # Return received image message
+    # Return the received image message
     return 'Image received successfully!', 200
 
 
@@ -58,7 +56,7 @@ async def send_processed_photo_async():
     while not os.path.exists(processed_image_path):
         await asyncio.sleep(0.1)
 
-    return await send_file(processed_image_path, mimetype='image/jpg')
+    return send_file(processed_image_path, mimetype='image/jpg')
 
 
 # Endpoint deleting images
