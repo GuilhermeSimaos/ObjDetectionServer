@@ -3,6 +3,7 @@ from quart_cors import cors
 import obj_detection_opencv
 import os
 import asyncio
+from aiohttp import FormData
 
 app = Quart(__name__)
 app = cors(app, allow_origin="*")
@@ -22,16 +23,19 @@ async def index():
 
 @app.route('/post-photo', methods=['POST'])
 async def handle_image():
-    form = await request.form
-    image = form.get('image')
+    multipart = await request.files
+    image_file = multipart.get('image')
 
-    if image is None:
+    if image_file is None:
         return 'Image not found in form', 400
 
     original_image_path = os.getcwd() + '/my-photo.jpg'
 
+    async with image_file.open() as f:
+        image_data = await f.read()
+
     with open(original_image_path, 'wb') as f:
-        f.write(image)
+        f.write(image_data)
 
     temporary_files.append(original_image_path)
 
