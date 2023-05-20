@@ -22,14 +22,17 @@ async def index():
 
 @app.route('/post-photo', methods=['POST'])
 async def handle_image():
-    image = await request.files.get('image')
+    form = await request.form
+    image = form.get('image')
 
     if image is None:
         return 'Image not found in form', 400
 
     original_image_path = os.getcwd() + '/my-photo.jpg'
 
-    await image.save(original_image_path)
+    with open(original_image_path, 'wb') as f:
+        f.write(image)
+
     temporary_files.append(original_image_path)
 
     asyncio.create_task(process_image_async(original_image_path))
