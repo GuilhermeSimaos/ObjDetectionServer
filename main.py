@@ -5,7 +5,7 @@ import os
 import asyncio
 
 app = Quart(__name__)
-app = cors(app)
+app = cors(app, allow_origin="*")
 
 temporary_files = []
 
