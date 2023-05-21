@@ -61,7 +61,7 @@ async def process_image_async(image_path):
                     fontScale=font_scale, color=colors[ClassInd], thickness=2)
 
     # Saving image in specified folder
-    cv2.imwrite(processed_image_path, img)
+    await cv2.imwrite(processed_image_path, img)
     temporary_files.append(processed_image_path)
 
 
