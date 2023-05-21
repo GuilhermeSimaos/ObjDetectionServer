@@ -3,7 +3,6 @@ from quart_cors import cors
 import obj_detection_opencv
 import os
 import asyncio
-from aiohttp import FormData
 
 app = Quart(__name__)
 app = cors(app, allow_origin="*")
@@ -11,6 +10,7 @@ app = cors(app, allow_origin="*")
 temporary_files = []
 
 
+# Async function to process image
 async def process_image_async(image_path):
     await asyncio.to_thread(obj_detection_opencv.process_image, image_path)
 
@@ -31,7 +31,7 @@ async def handle_image():
 
     original_image_path = os.getcwd() + '/my-photo.jpg'
 
-    async with image_file.open() as f:
+    async with image_file as f:
         image_data = await f.read()
 
     with open(original_image_path, 'wb') as f:
