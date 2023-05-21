@@ -40,11 +40,6 @@ async def index():
     return await render_template(index_path)
 
 
-# # Function to process image in background
-# def process_image(image_path):
-#     obj_detection_opencv.process_image(image_path)
-#
-
 # Async function to call process image
 async def process_image_async(image_path):
     img = cv2.imread(image_path)        # Read an image
@@ -67,6 +62,7 @@ async def process_image_async(image_path):
 
     # Saving image in specified folder
     cv2.imwrite(processed_image_path, img)
+    temporary_files.append(processed_image_path)
 
 
 @app.route('/post-photo', methods=['POST'])
