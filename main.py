@@ -10,15 +10,21 @@ app = cors(app, allow_origin="*")
 temporary_files = []
 
 
-# Async function to process image
-async def process_image_async(image_path):
-    await asyncio.to_thread(obj_detection_opencv.process_image, image_path)
-
-
 @app.route('/')
 async def index():
     index_path = 'index.html'
     return await render_template(index_path)
+
+
+# Function to process image in background
+def process_image(image_path):
+    obj_detection_opencv.process_image(image_path)
+
+
+# Async function to call process image
+async def process_image_async(image_path):
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, process_image, image_path)
 
 
 @app.route('/post-photo', methods=['POST'])
