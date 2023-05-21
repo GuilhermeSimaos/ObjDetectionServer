@@ -30,13 +30,8 @@ async def handle_image():
         return 'Image not found in form', 400
 
     original_image_path = os.getcwd() + '/my-photo.jpg'
-
-    async with image_file as f:
-        image_data = await f.read()
-
-    with open(original_image_path, 'wb') as f:
-        f.write(image_data)
-
+    # Save file in disc
+    image_file.save(original_image_path)
     temporary_files.append(original_image_path)
 
     asyncio.create_task(process_image_async(original_image_path))
