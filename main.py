@@ -77,6 +77,9 @@ async def handle_image():
     if image_file is None:
         return 'Image not found in form', 400
 
+    image_directory = os.getcwd()+'/images/'
+    os.makedirs(image_directory, exist_ok=True)
+
     # Save file in disc and temp array for later removal
     await image_file.save(original_image_path)
     temporary_files.append(original_image_path)
