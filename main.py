@@ -47,8 +47,10 @@ async def index():
 
 # Async function to call process image
 async def process_image_async(image_path):
-    # Read an image information
-    img = cv2.imread(image_path)
+    img = cv2.imread(image_path)        # Read an image
+
+    if img is None or img.size == 0:
+        return f"Failed to load image: {image_path}"
 
     # Detecting objects whose confidence values are above 55%
     ClassIndex, confidence, bbox = model.detect(img, confThreshold=0.55)
