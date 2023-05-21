@@ -66,7 +66,7 @@ async def process_image_async(image_path):
                     fontScale=font_scale, color=colors[ClassInd], thickness=2)
 
     # Saving image in specified folder
-    cv2.imwrite((os.getcwd() + '/processed-photo.jpg'), img)
+    cv2.imwrite(processed_image_path, img)
 
 
 @app.route('/post-photo', methods=['POST'])
@@ -78,7 +78,7 @@ async def handle_image():
         return 'Image not found in form', 400
 
     # Save file in disc and temp array for later removal
-    image_file.save(original_image_path)
+    await image_file.save(original_image_path)
     temporary_files.append(original_image_path)
 
     # Create task for async function
