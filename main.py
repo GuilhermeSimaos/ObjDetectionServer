@@ -61,8 +61,7 @@ async def process_image_async(image_path):
                     fontScale=font_scale, color=colors[ClassInd], thickness=2)
 
     # Saving image in specified folder
-    await cv2.imwrite(processed_image_path, img)
-    temporary_files.append(processed_image_path)
+    cv2.imwrite(processed_image_path, img)
 
 
 @app.route('/post-photo', methods=['POST'])
@@ -78,7 +77,6 @@ async def handle_image():
 
     # Save file in disc and temp array for later removal
     await image_file.save(original_image_path)
-    temporary_files.append(original_image_path)
 
     # Create task for async function
     asyncio.create_task(process_image_async(original_image_path))
@@ -98,10 +96,8 @@ async def send_processed_photo_async():
 
 @app.route('/delete-files', methods=['DELETE'])
 async def delete_files():
-    for file_path in temporary_files:
-        os.remove(file_path)
-
-    temporary_files.clear()
+    os.remove(original_image_path)
+    os.remove(processed_image_path)
 
     return 'Files deleted successfully!', 200
 
