@@ -96,10 +96,19 @@ async def send_processed_photo_async():
 
 @app.route('/delete-files', methods=['DELETE'])
 async def delete_files():
-    os.remove(original_image_path)
-    os.remove(processed_image_path)
+    clear_directory(os.getcwd()+'/images')
 
     return 'Files deleted successfully!', 200
+
+
+def clear_directory(directory):
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            img_file = os.path.join(root, file)
+            os.remove(img_file)
+        for dire in dirs:
+            direc = os.path.join(root, dire)
+            os.rmdir(direc)
 
 
 if __name__ == '__main__':
