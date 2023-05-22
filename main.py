@@ -1,15 +1,14 @@
 import cv2
 import numpy as np
 import os
-import asyncio
 
-from quart import Quart, request, send_file, render_template
-from quart_cors import cors
+from flask import Flask, request, send_file
+from flask_cors import CORS
 
-app = Quart(__name__)
-app = cors(app, allow_origin="*")
+# Define Flask and CORS
+app = Flask(__name__)
+CORS(app)
 
-temporary_files = []
 original_image_path = os.getcwd() + '/images/my-photo.jpg'
 processed_image_path = os.getcwd() + '/images/processed-photo.jpg'
 
@@ -34,15 +33,10 @@ model.setInputMean((127.5, 127.5, 127.5))
 model.setInputSwapRB(True)
 
 
-@app.route('/')
-async def index():
-    index_path = 'index.html'
-    return await render_template(index_path)
-
-
-# Async function to call process image
-async def process_image_async(image_path):
-    img = cv2.imread(image_path)        # Read an image
+# Responsible for processing the image
+def process_image(image_path):
+    # Reads an image
+    img = cv2.imread(image_path)
 
     if img is None or img.size == 0:
         return f"Failed to load image: {image_path}"
@@ -64,69 +58,37 @@ async def process_image_async(image_path):
     cv2.imwrite(processed_image_path, img)
 
 
+# Responsible for receiving and saving image locally
 @app.route('/post-photo', methods=['POST'])
-async def handle_image():
-    multipart = await request.files
-    image_file = multipart.get('image')
+def handle_image():
+    # Retrieving the POST image formData from frontend
+    image = request.files.get('image')
 
-    if image_file is None:
+    # Return error if image wasn't on the formData
+    if image is None:
         return 'Image not found in form', 400
 
-    image_directory = os.getcwd()+'/images/'
-    os.makedirs(image_directory, exist_ok=True)
+    # Saving image locally
+    image.save(original_image_path)
 
-    # Save file in disc and temp array for later removal
-    await image_file.save(original_image_path)
+    # Processing image
+    process_image(original_image_path)
 
-    # Create task for async function
-    asyncio.create_task(process_image_async(original_image_path))
-
+    # Return received image message
     return 'Image received successfully!', 200
 
 
+# Endpoint for sending the processed photo
 @app.route('/get-processed-photo', methods=['GET'])
-async def send_processed_photo_async():
-    temporary_files.append(processed_image_path)
-
-    while not os.path.exists(processed_image_path):
-        await asyncio.sleep(0.1)
-
-    return await send_file(processed_image_path, mimetype='image/jpg')
+def send_processed_photo():
+    return send_file(processed_image_path, mimetype='image/jpg')
 
 
 @app.route('/delete-files', methods=['DELETE'])
 def delete_files():
-    message = ""
-    code = ""
-    try:
-        clear_directory(os.getcwd()+'/images')
-    except FileNotFoundError:
-        message = "File not found!"
-        code = 500
-    except PermissionError:
-        message = "Permission error!"
-        code = 500
-    except IsADirectoryError:
-        message = "Is a directory error!"
-        code = 500
-    except OSError:
-        message = "OS error!"
-        code = 500
-    except NotADirectoryError:
-        message = "Not a directory error!"
-        code = 500
-    finally:
-        return f"{message}", code
-
-
-def clear_directory(directory):
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            img_file = os.path.join(root, file)
-            os.remove(img_file)
-        for dire in dirs:
-            direc = os.path.join(root, dire)
-            os.rmdir(direc)
+    os.remove(original_image_path)
+    os.remove(processed_image_path)
+    return "Deletion of files executed!", 200
 
 
 if __name__ == '__main__':
