@@ -1,26 +1,54 @@
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import FileResponse
+import os
+import obj_detection_opencv
+import asyncio
 
+# Define FastAPI app
 app = FastAPI()
 
-# Configuring CORS policy
-origins = ["https://objdetectionserver-production.up.railway.app"]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET"],
-    allow_headers=["*"],
-)
+@app.get('/')
+async def index():
+    index_path = 'index.html'
+    return FileResponse(index_path)
 
 
-@app.get("/api/data")
-async def get_data(request: Request):
-    response = JSONResponse(content={"message": "Let's FUCKING GO!!!"})
-    response.headers["Access-Control-Allow-Origin"] = request.headers.get("origin", "*")
-    return response
+@app.post('/post-photo')
+async def handle_image(image: UploadFile = File(...)):
+    # Return error if image wasn't uploaded
+    if image is None:
+        return 'Image not found in form', 400
+
+    # Saving locally
+    with open(os.getcwd() + '/my-photo.jpg', 'wb') as f:
+        f.write(await image.read())
+
+    # Processing image asynchronously
+    await asyncio.to_thread(obj_detection_opencv.process_image, os.getcwd() + '/my-photo.jpg')
+
+    # Return received image message
+    return 'Image received successfully!', 200
+
+
+# Endpoint for sending the processed photo
+@app.get('/get-processed-photo')
+async def send_processed_photo():
+    processed_image_path = os.getcwd()+'/processed-photo.jpg'
+    return FileResponse(processed_image_path, media_type='image/jpg')
+
+
+# Responsible for deleting images saved locally
+@app.delete('/delete-files')
+async def delete_files():
+    if os.path.exists(os.getcwd() + '/my-photo.jpg'):
+        os.remove(os.getcwd() + '/my-photo.jpg')
+
+    if os.path.exists(os.getcwd() + '/processed-photo.jpg'):
+        os.remove(os.getcwd() + '/processed-photo.jpg')
+
+    return "Deletion of files executed!", 200
+
 
 if __name__ == '__main__':
     import uvicorn
