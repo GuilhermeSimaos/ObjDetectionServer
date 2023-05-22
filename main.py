@@ -1,15 +1,27 @@
 import asyncio
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Configuring CORS policy
+origins = ["http://localhost", "http://localhost:3000",]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/api/data")
 async def get_data():
     # Simulating an async task, like a search on the database
-    await asyncio.sleep(1)
-    return {"message": "Hello World using FastAPI"}
-
+    # await asyncio.sleep(1)
+    return {"message": "Let's FUCKING GO!!!"}
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    import uvicorn
+    uvicorn.run(app, host='0.0.0.0', port=8000)
