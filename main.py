@@ -16,8 +16,8 @@ app.add_middleware(
 )
 
 
-@app.get("/api/post-photo")
-async def post_photo(request: Request):
+@app.get("/api/data")
+async def get_data(request: Request):
     response = JSONResponse(content={"message": "Let's FUCKING GO!!!"})
     response.headers["Access-Control-Allow-Origin"] = request.headers.get("origin", "*")
     return response
