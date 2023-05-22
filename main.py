@@ -25,10 +25,7 @@ async def handle_image(image: UploadFile = File(...)):
         f.write(await image.read())
 
     # Processing image asynchronously
-    await anyio.to_thread.run_sync(
-        obj_detection_opencv.process_image,
-        os.getcwd() + '/my-photo.jpg'
-    )
+    await obj_detection_opencv.process_image(os.getcwd() + '/my-photo.jpg')
 
     # Return received image message
     return 'Image received successfully!', 200

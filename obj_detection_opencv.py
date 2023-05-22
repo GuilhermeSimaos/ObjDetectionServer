@@ -27,7 +27,7 @@ model.setInputSwapRB(True)
 
 
 # Function to process images and save it locally
-def process_image(image_path):
+async def process_image(image_path):
     img = cv2.imread(image_path)
 
     # Detecting objects whose confidence values are above 55%
