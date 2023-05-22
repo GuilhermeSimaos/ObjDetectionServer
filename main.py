@@ -35,11 +35,11 @@ def send_processed_photo():
     return send_file(os.getcwd() + '/processed-photo.jpg', mimetype='image/jpg')
 
 
-@app.route('/delete-files', methods=['DELETE'])
-def delete_files():
-    os.remove(os.getcwd() + '/my-photo.jpg')
-    os.remove(os.getcwd() + '/processed-photo.jpg')
-    return "Deletion of files executed!", 200
+# @app.route('/delete-files', methods=['DELETE'])
+# def delete_files():
+#     os.remove(os.getcwd() + '/my-photo.jpg')
+#     os.remove(os.getcwd() + '/processed-photo.jpg')
+#     return "Deletion of files executed!", 200
 
 
 if __name__ == '__main__':
