@@ -16,7 +16,7 @@ with open(file_name, 'rt') as fpt:
     class_Labels = fpt.read().rstrip('\n').split('\n')
 
 # Setting up color scheme
-np.random.seed(54321)
+np.random.seed(6543210)
 colors = np.random.uniform(0, 255, size=(len(class_Labels), 3))
 
 # Configuring detection model input
