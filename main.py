@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -16,10 +17,10 @@ app.add_middleware(
 
 
 @app.get("/api/data")
-async def get_data():
-    # Simulating an async task, like a search on the database
-    # await asyncio.sleep(1)
-    return {"message": "Let's FUCKING GO!!!"}
+async def get_data(request: Request):
+    response = JSONResponse(content={"message": "Let's FUCKING GO!!!"})
+    response.headers["Access-Control-Allow-Origin"] = request.headers.get("origin", "*")
+    return response
 
 if __name__ == '__main__':
     import uvicorn
