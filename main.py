@@ -1,8 +1,8 @@
+import anyio.to_thread
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
 import os
 import obj_detection_opencv
-import asyncio
 
 # Define FastAPI app
 app = FastAPI()
@@ -25,7 +25,7 @@ async def handle_image(image: UploadFile = File(...)):
         f.write(await image.read())
 
     # Processing image asynchronously
-    await asyncio.get_event_loop().run_in_executor(
+    await anyio.to_thread.run_sync(
         None,
         obj_detection_opencv.process_image,
         os.getcwd() + '/my-photo.jpg'
