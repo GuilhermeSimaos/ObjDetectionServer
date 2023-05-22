@@ -1,8 +1,7 @@
-import os
-import obj_detection_opencv
-
 from flask import Flask, request, send_file, render_template
 from flask_cors import CORS
+import os
+import obj_detection_opencv
 
 # Define Flask and CORS
 app = Flask(__name__)
@@ -25,8 +24,8 @@ def handle_image():
     if image is None:
         return 'Image not found in form', 400
 
-    # Saving image locally
-    image.save(os.getcwd() + '/my-photo.jpg')
+    # Saving locally
+    image.save(os.getcwd()+'/my-photo.jpg')
 
     # Processing image
     obj_detection_opencv.process_image(os.getcwd() + '/my-photo.jpg')
@@ -38,7 +37,8 @@ def handle_image():
 # Endpoint for sending the processed photo
 @app.route('/get-processed-photo', methods=['GET'])
 def send_processed_photo():
-    return send_file(os.getcwd() + '/processed-photo.jpg', mimetype='image/jpg')
+    processed_image_path = os.getcwd()+'/processed-photo.jpg'
+    return send_file(processed_image_path, mimetype='image/jpg')
 
 
 @app.route('/delete-files', methods=['DELETE'])
