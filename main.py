@@ -95,10 +95,28 @@ async def send_processed_photo_async():
 
 
 @app.route('/delete-files', methods=['DELETE'])
-async def delete_files():
-    clear_directory(os.getcwd()+'/images')
-
-    return 'Files deleted successfully!', 200
+def delete_files():
+    message = ""
+    code = ""
+    try:
+        clear_directory(os.getcwd()+'/images')
+    except FileNotFoundError:
+        message = "File not found!"
+        code = 500
+    except PermissionError:
+        message = "Permission error!"
+        code = 500
+    except IsADirectoryError:
+        message = "Is a directory error!"
+        code = 500
+    except OSError:
+        message = "OS error!"
+        code = 500
+    except NotADirectoryError:
+        message = "Not a directory error!"
+        code = 500
+    finally:
+        return f"{message}", code
 
 
 def clear_directory(directory):
