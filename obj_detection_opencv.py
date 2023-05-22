@@ -31,7 +31,7 @@ async def process_image(image_path):
     img = cv2.imread(image_path)
 
     # Detecting objects whose confidence values are above 55%
-    ClassIndex, confidence, bbox = model.detect(img, confThreshold=0.55)
+    ClassIndex, confidence, bbox = np.array(model.detect(img, confThreshold=0.55))
 
     # Setting up text style
     font_scale = 2
