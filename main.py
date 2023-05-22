@@ -9,9 +9,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-original_image_path = os.getcwd() + '/my-photo.jpg'
-processed_image_path = os.getcwd() + '/processed-photo.jpg'
-
 # Setting up openCV model
 config_file = os.getcwd() + '/opencvFiles/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt'
 frozen_model = os.getcwd() + '/opencvFiles/frozen_inference_graph.pb'
@@ -55,7 +52,7 @@ def process_image(image_path):
                     fontScale=font_scale, color=colors[ClassInd], thickness=2)
 
     # Saving image in specified folder
-    cv2.imwrite(processed_image_path, img)
+    cv2.imwrite(os.getcwd() + '/processed-photo.jpg', img)
 
 
 # Responsible for receiving and saving image locally
@@ -69,10 +66,10 @@ def handle_image():
         return 'Image not found in form', 400
 
     # Saving image locally
-    image.save(original_image_path)
+    image.save(os.getcwd() + '/my-photo.jpg')
 
     # Processing image
-    process_image(original_image_path)
+    process_image(os.getcwd() + '/my-photo.jpg')
 
     # Return received image message
     return 'Image received successfully!', 200
@@ -81,13 +78,13 @@ def handle_image():
 # Endpoint for sending the processed photo
 @app.route('/get-processed-photo', methods=['GET'])
 def send_processed_photo():
-    return send_file(processed_image_path, mimetype='image/jpg')
+    return send_file(os.getcwd() + '/processed-photo.jpg', mimetype='image/jpg')
 
 
 @app.route('/delete-files', methods=['DELETE'])
 def delete_files():
-    os.remove(original_image_path)
-    os.remove(processed_image_path)
+    os.remove(os.getcwd() + '/my-photo.jpg')
+    os.remove(os.getcwd() + '/processed-photo.jpg')
     return "Deletion of files executed!", 200
 
 
