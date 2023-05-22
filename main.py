@@ -1,12 +1,18 @@
 import os
 import obj_detection_opencv
 
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, render_template
 from flask_cors import CORS
 
 # Define Flask and CORS
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route('/')
+def index():
+    index_path = 'index.html'
+    return render_template(index_path)
 
 
 # Responsible for receiving and saving image locally
