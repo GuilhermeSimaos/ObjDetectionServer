@@ -1,11 +1,10 @@
-import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 # Configuring CORS policy
-origins = ["http://localhost", "http://localhost:3000",]
+origins = ["https://objdetectionserver-production.up.railway.app"]
 
 app.add_middleware(
     CORSMiddleware,
