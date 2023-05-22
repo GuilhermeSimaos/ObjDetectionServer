@@ -31,17 +31,25 @@ async def process_image(image_path):
     img = cv2.imread(image_path)
 
     # Detecting objects whose confidence values are above 55%
-    ClassIndex, confidence, bbox = np.array(model.detect(img, confThreshold=0.55))
+    ClassIndex, confidence, bbox = model.detect(img, confThreshold=0.55)
 
     # Setting up text style
     font_scale = 2
     font = cv2.FONT_HERSHEY_PLAIN
 
-    # Writing boxes and text of the detected objects in the image
-    for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
+    for i in range(len(ClassIndex)):
+        ClassInd = ClassIndex[i]
+        # conf = confidence[i]
+        boxes = boxes[i]
         cv2.rectangle(img, boxes, colors[ClassInd], 2)
         cv2.putText(img, class_Labels[ClassInd - 1].upper(), (boxes[0] + 10, boxes[1] + 40), font,
                     fontScale=font_scale, color=colors[ClassInd], thickness=2)
+
+    # # Writing boxes and text of the detected objects in the image
+    # for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
+    #     cv2.rectangle(img, boxes, colors[ClassInd], 2)
+    #     cv2.putText(img, class_Labels[ClassInd - 1].upper(), (boxes[0] + 10, boxes[1] + 40), font,
+    #                 fontScale=font_scale, color=colors[ClassInd], thickness=2)
 
     # Saving image in specified folder
     processed_image = os.getcwd() + '/processed-photo.jpg'
