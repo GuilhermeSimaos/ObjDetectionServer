@@ -40,7 +40,7 @@ async def process_image(image_path):
     for i in range(len(ClassIndex)):
         ClassInd = ClassIndex[i]
         # conf = confidence[i]
-        boxes = boxes[i]
+        boxes = bbox[i]
         cv2.rectangle(img, boxes, colors[ClassInd], 2)
         cv2.putText(img, class_Labels[ClassInd - 1].upper(), (boxes[0] + 10, boxes[1] + 40), font,
                     fontScale=font_scale, color=colors[ClassInd], thickness=2)
