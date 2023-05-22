@@ -9,8 +9,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-original_image_path = os.getcwd() + '/images/my-photo.jpg'
-processed_image_path = os.getcwd() + '/images/processed-photo.jpg'
+original_image_path = os.getcwd() + '/my-photo.jpg'
+processed_image_path = os.getcwd() + '/processed-photo.jpg'
 
 # Setting up openCV model
 config_file = os.getcwd() + '/opencvFiles/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt'
