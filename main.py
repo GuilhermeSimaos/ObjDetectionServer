@@ -41,6 +41,7 @@ def send_processed_photo():
     return send_file(processed_image_path, mimetype='image/jpg')
 
 
+# Responsible for deleting images saved locally
 @app.route('/delete-files', methods=['DELETE'])
 def delete_files():
     if os.path.exists(os.getcwd() + '/my-photo.jpg'):
