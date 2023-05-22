@@ -1,11 +1,20 @@
-import anyio.to_thread
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import os
 import obj_detection_opencv
 
 # Define FastAPI app
 app = FastAPI()
+
+# Configuring the CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get('/')
