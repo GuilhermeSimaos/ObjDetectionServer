@@ -61,4 +61,4 @@ async def delete_files():
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='0.0.0.0')
+    uvicorn.run(app, host='0.0.0.0', ssl_certfile=None, ssl_keyfile=None)
